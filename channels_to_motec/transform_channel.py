@@ -1,4 +1,4 @@
-import interpolate_channel
+import channels_to_motec.interpolate_channel as interpolate_channel
 
 
 # Takes a dataframe series and transforms the data to fit in MoTec as a Steered Angle

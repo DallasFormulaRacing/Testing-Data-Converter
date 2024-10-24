@@ -4,7 +4,7 @@ from channels_to_motec.mandrewLDWriter import File, Channel
 import channels_to_motec.transform_channel as tc
 
 
-dataframe = pd.read_csv('Data/Converted CANbus Data/758.csv')
+dataframe = pd.read_csv('Data/Converted CANbus Data/39.csv')
 processed_angle_series, angle_hz = tc.process_steered_angle(dataframe['timestamp'], dataframe['Analog Input #2'])
 processed_throttle_series, throttle_hz = tc.process_throttle_position(dataframe['timestamp'], dataframe['TPS'])
 

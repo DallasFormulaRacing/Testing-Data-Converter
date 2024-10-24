@@ -9,7 +9,7 @@ def prune_channels(time_series, data_series):
     mask = data_series.notna()
     time_series, data_series = time_series[mask], data_series[mask]
 
-    # Filter out data points with a difference of 10
+    # Filter out data points with a difference of less than 0.01 seconds
     reduced_time_series = []
     reduced_data_series = []
 
@@ -19,7 +19,7 @@ def prune_channels(time_series, data_series):
 
     for i in range(1, len(time_series)):
         current_time = time_series.iloc[i]
-        if current_time - last_time >= 10:
+        if current_time - last_time >= .01:
             reduced_time_series.append(current_time)
             reduced_data_series.append(data_series.iloc[i])
             last_time = current_time

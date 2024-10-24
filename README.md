@@ -1,5 +1,4 @@
-# Testing-Data-Converter
-### Converter from csv / canbus formats into support for multiple racing data formats.
-
-#### NOTE: The way I wrote my channel processing for steering angle, throttle position, etc. is based on the assumption that sensor data will come paired with time, like how it is when I download it from Arjun's Grafana.
-#### It shouldn't be hard to change that to fit the format data will actually come in.
+## Added full support for putting EVERY channel from our CAN Bus files into a MoTec I2 pro file, with support for units and frequency.
+#### This project processes brake and steering data to be usable in MoTec I2. It will also prune channels: filters out null data points and those that are recorded within 10 milliseconds of each other to reduce the data density and speed up processing. And, it will interpolate the channels to keep a regular frequency. 
+#### If we can, I think we should remove a lot of the channels included that weren't in Reid's original list because they seem useless. 
+#### This code is ugly, but it should be readable.

@@ -27,8 +27,8 @@ def prune_channels(time_series, data_series):
     return pd.Series(reduced_time_series), pd.Series(reduced_data_series)
 
 
-# Takes a dataframe series that is the right shape, and prunes it and interpolates it
-def process_channel(time_series, data_series):
+# Takes a dataframe series that is the right shape, and prunes it and interpolates it, so it conforms to MoTec
+def assimilate_channel(time_series, data_series):
     time_series, data_series = prune_channels(time_series, data_series)
     processed_data_series = data_series.astype(float)
     processed_data_series, hz = interpolate_channel.make_data_regular_intervals(time_series, processed_data_series)
@@ -43,11 +43,12 @@ def transform_steered_angle(time_series, angle_series):
 
     # Apply data transformation from Arjun's Grafana dashboard
     processed_angle_series = processed_angle_series.apply(lambda x: ((x - 2) * 0.75))
-    # Scale the data to fit within the bounds [-10,10] like MoTec (m) default range
-    processed_angle_series = processed_angle_series.apply(lambda x: x * 8.888 if x > 0 else x * 6.7114094 if x < 10 else x)
+    # Scale the data to fit within the bounds [-10,10] so we can adjust it easily
+    processed_angle_series = processed_angle_series.apply(
+        lambda x: x * 8.888 if x > 0 else x * 6.7114094 if x < 10 else x)
     processed_angle_series = processed_angle_series.apply(lambda x: 10 if x > 10 else -10 if x < -10 else x)
-    # Convert to MoTec's degrees range. It's weirdly automatically between -572.9578 and 572.9578
-    processed_angle_series = processed_angle_series.apply(lambda x: x * 57.29578)
+    # Convert to our wheel's range of motion, [-105,105].
+    processed_angle_series = processed_angle_series.apply(lambda x: x * 10.5)
 
     # Interpolate the data to create regular time intervals
     processed_angle_series, hz = interpolate_channel.make_data_regular_intervals(time_series, processed_angle_series)
@@ -64,6 +65,7 @@ def transform_brakes_pressure(time_series, brakes_pressure_series):
     processed_brakes_pressure_series = processed_brakes_pressure_series.apply(lambda x: 500 * (x - 0.5))
 
     # Interpolate the data to create regular time intervals
-    processed_brakes_pressure_series, hz = interpolate_channel.make_data_regular_intervals(time_series, processed_brakes_pressure_series)
+    processed_brakes_pressure_series, hz = interpolate_channel.make_data_regular_intervals(time_series,
+                                                                                           processed_brakes_pressure_series)
 
     return processed_brakes_pressure_series, hz

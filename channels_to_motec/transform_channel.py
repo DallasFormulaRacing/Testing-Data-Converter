@@ -48,7 +48,7 @@ def transform_steered_angle(time_series, angle_series):
         lambda x: x * 8.888 if x > 0 else x * 6.7114094 if x < 10 else x)
     processed_angle_series = processed_angle_series.apply(lambda x: 10 if x > 10 else -10 if x < -10 else x)
     # Convert to our wheel's range of motion, [-105,105].
-    processed_angle_series = processed_angle_series.apply(lambda x: x * 10.5)
+    processed_angle_series = processed_angle_series.apply(lambda x: x * 12.4)
 
     # Interpolate the data to create regular time intervals
     processed_angle_series, hz = interpolate_channel.make_data_regular_intervals(time_series, processed_angle_series)
